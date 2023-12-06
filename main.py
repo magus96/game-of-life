@@ -1,5 +1,7 @@
 import pygame
 import random
+from grid_helpers import draw_grid, adjust_grid
+from utils import gen, get_neighbours
 
 pygame.init()
 
@@ -16,66 +18,6 @@ FPS = 180
 screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
 
 clock = pygame.time.Clock()
-
-def gen(num):
-    return set([(random.randrange(0, WINDOW_SIZE), random.randrange(0, WINDOW_SIZE)) for _ in range(num)])
-
-def draw_grid(positions):
-    for position in positions:
-        col, row = position
-        top_left = (col * TILE_SIZE, row * TILE_SIZE)
-        pygame.draw.rect(screen, YELLOW, (*top_left, TILE_SIZE, TILE_SIZE))
-
-
-    for row in range(WINDOW_SIZE):
-        pygame.draw.line(screen, WHITE, (0, row*TILE_SIZE), (WINDOW_SIZE, row*TILE_SIZE))
-
-    for col in range(WINDOW_SIZE):
-        pygame.draw.line(screen, WHITE, (col * TILE_SIZE, 0), (col * TILE_SIZE, WINDOW_SIZE))
-
-
-def adjust_grid(positions):
-    all_neighbours = set()
-    new_positions = set()
-
-    for position in positions:
-        neighbours = get_neighbours(position)
-        all_neighbours.update(neighbours)
-
-        neighbours = list(filter(lambda x: x in positions, neighbours))
-
-        if len(neighbours) in [2, 3]:
-            new_positions.add(position)
-
-    for position in all_neighbours:
-        neighbours = get_neighbours(position)
-
-        neighbours = list(filter(lambda x: x in positions, neighbours))
-
-        if len(neighbours) == 3:
-            new_positions.add(position)
-
-    return new_positions
-
-
-def get_neighbours(pos):
-    x, y = pos
-    neighbours = []
-
-    for dx in [-1,0,1]:
-        if x + dx < 0 or x + dx > WINDOW_SIZE:
-            continue
-        for dy in [-1, 0, 1]:
-            if y+ dy < 0 or y+dy > WINDOW_SIZE:
-                continue 
-
-            if dx == 0 and dy == 0:
-                continue
-                
-            neighbours.append((x+dx, y+dy))
-
-    return neighbours
-
 
 def main():
     running = True
@@ -127,7 +69,7 @@ def main():
                     positions = gen(random.randrange(150, 200) * WINDOW_SIZE)
     
         screen.fill(TILE_CLR)
-        draw_grid(positions)
+        draw_grid(positions, screen= screen)
         pygame.display.update()
     
     pygame.quit()
