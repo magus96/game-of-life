@@ -11,7 +11,7 @@ YELLOW = (255, 255, 0)
 WINDOW_SIZE = 800
 TILE_SIZE = 20
 GRID_SIZE = (WINDOW_SIZE/TILE_SIZE)
-FPS = 60
+FPS = 180
 
 screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
 
@@ -81,7 +81,7 @@ def main():
     running = True
     playing = False
     count = 0
-    update_freq = 120
+    update_freq = 2 * FPS
 
     positions = set()
     while running:
